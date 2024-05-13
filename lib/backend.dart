@@ -31,11 +31,8 @@ class Message {
 class Conversation {
   final DateTime startTime;
   DateTime endTime;
-
-  // final List<Map<String, String>> messages;
-  // ---a List of Map objects containing String and String objects -- changed due to error
-  final List<Map<String, String>> messages;
-  // ---a List of Map objects containing String and dynamic objects
+  final List<Message> messages; // now using a list of message objects.
+  // -- the Message object is new as of this point in the code (poor commit etiquette 😛)
 
   Conversation({required this.startTime})
       : endTime = startTime, // init. endTime as startTime
@@ -45,14 +42,19 @@ class Conversation {
   ///
   /// ... method to add messages to the backend
   void addMessage(String user, String message) {
-    messages.add({
-      'user': user,
-      'message': message,
-      'timestamp': DateTime.now().toIso8601String()
-    });
+    messages.add(Message(user: user, content: message));
   }
 
-  String toJson() => jsonEncode(this);
+  // String toJson() => jsonEncode(this); // moving away from this because toJson can't handle DateTime, only String
+  //* better practice: implement error handling rather than rewrite half the fxckin module
+  // ... and moving to this
+
+  Map<String, dynamic> toJson() => {
+        'startTime': startTime.toIso8601String(),
+        'endTime': endTime.toIso8601String(),
+        'messages': messages.map((msg) => msg.toJson()).toList(),
+        // 'messages': messages.map((e) => null) //? One of you (IT'S YOU) will surely betray me
+      };
 }
 
 //// class Backend(){} // class declaration, needs a body
@@ -69,8 +71,8 @@ class Backend {
   ///
   /// store the chat into the database(s) using SQL queries
   Future<void> storeConversation(Conversation conversation) async {
-    String conversationJSON =
-        conversation.toJson(); // convert the entire chat to a JSON object
+    // String conversationJSON = conversation.toJson(); // convert the entire chat to a JSON object // ... pivot
+    String conversationJSON = jsonEncode(conversation);
     String query =
         "INSERT INTO conversations (start_time, end_time, messages) VALUES (@startTime, @endTime, @messages)";
     await connection.execute(query, parameters: {

@@ -1,0 +1,6 @@
+-- Configurations for the TUI/CLI app
+-- 1. Start
+-- 2. Prompt
+-- 3. Response
+-- 4. etc
+-- 5. exit

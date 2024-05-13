@@ -11,10 +11,15 @@ _Built right after ![Unopened AI](https://github.com/waynemaranga/unopened_ai), 
 
 ## 📝 TODO:
 [ ] Implement backend (like w/ `crossterm`)
+
 [ ] Store conversations in a Postgres DB
+
 [ ] Try streaming API
+
 [ ] Try in-memory datastore, maybe in a `backend.dart` module
+
 [ ] Python + Dart interface for embedding, also in `backend.dart`
+
 [ ] An API to a frontent, unfortunately
 
 ## LICENSE

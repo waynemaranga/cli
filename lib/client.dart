@@ -3,7 +3,8 @@ library client;
 
 // export 'client.dart';
 
-import 'dart:convert'; //https://api.dart.dev/stable/3.3.4/dart-convert/dart-convert-library.html
+import 'dart:convert'
+    as convert; //https://api.dart.dev/stable/3.3.4/dart-convert/dart-convert-library.html
 
 import 'package:dotenv/dotenv.dart'
     show
@@ -80,9 +81,9 @@ class ChatClient {
 
     // --
     final apiResponse = await http.post(url,
-        headers: headers, body: jsonEncode(request.toJson()));
+        headers: headers, body: convert.jsonEncode(request.toJson()));
     if (apiResponse.statusCode == 200) {
-      final completion = jsonDecode(apiResponse.body);
+      final completion = convert.jsonDecode(apiResponse.body);
       final response = completion['choices'][0]['message']['content'];
       return ('Completion: $response');
     } else {
@@ -116,10 +117,10 @@ Future<void> main() async {
   };
 
   final apiResponse = await http.post(url,
-      headers: headers, body: jsonEncode(request.toJson()));
+      headers: headers, body: convert.jsonEncode(request.toJson()));
 
   if (apiResponse.statusCode == 200) {
-    final completion = jsonDecode(apiResponse.body);
+    final completion = convert.jsonDecode(apiResponse.body);
     final response = completion['choices'][0]['message']['content'];
     print('Completion: $response');
   } else {

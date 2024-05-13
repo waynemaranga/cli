@@ -1,4 +1,8 @@
 /// Bot Client, with OpenAI
+library client;
+
+// export 'client.dart';
+
 import 'dart:convert'; //https://api.dart.dev/stable/3.3.4/dart-convert/dart-convert-library.html
 
 import 'package:dotenv/dotenv.dart'
@@ -17,7 +21,7 @@ const system = "system"; // unnecessary, just for kicks
 const user = "user";
 const assistant = "assistant";
 
-/// Message object in the request body
+/// `Message` object in the request body
 class Message {
   /// Role should be an enum, or not
   final String role;
@@ -51,6 +55,41 @@ class Completion {}
 // -- get response, parse & extract text
 // -- return
 
+class ChatClient {
+  /// get bot's response from the completion
+  Future<String> getResponse(input) async {
+    // --
+    DotEnv env = DotEnv(includePlatformEnvironment: true)..load(['.env']);
+    String openaiApiKey = env['OPENAI_API_KEY']!;
+
+    // --
+    final systemMessage =
+        Message(role: system, content: "You are a very helpful assistant");
+    final userMessage =
+        Message(role: user, content: "Who are the Beastie Boys?");
+    final request = RequestBody(
+        model: "gpt-3.5-turbo", messages: [systemMessage, userMessage]);
+
+    // --
+    final url = Uri.parse("https://api.openai.com/v1/chat/completions");
+    final headers = {
+      'Content-type': 'application/json',
+      'Authorization': 'Bearer $openaiApiKey'
+    };
+
+    // --
+    final apiResponse = await http.post(url,
+        headers: headers, body: jsonEncode(request.toJson()));
+    if (apiResponse.statusCode == 200) {
+      final completion = jsonDecode(apiResponse.body);
+      final response = completion['choices'][0]['message']['content'];
+      return ('Completion: $response');
+    } else {
+      return ('Request failed with status: ${apiResponse.statusCode}');
+    }
+  }
+}
+
 Future<void> main() async {
   // -- get api keys
   DotEnv env = DotEnv(includePlatformEnvironment: true)..load(['.env']);
@@ -79,9 +118,9 @@ Future<void> main() async {
       headers: headers, body: jsonEncode(request.toJson()));
 
   if (apiResponse.statusCode == 200) {
-    final data = jsonDecode(apiResponse.body);
-    final completion = data['choices'][0]['message']['content'];
-    print('Completion: $completion');
+    final completion = jsonDecode(apiResponse.body);
+    final response = completion['choices'][0]['message']['content'];
+    print('Completion: $response');
   } else {
     print('Request failed with status: ${apiResponse.statusCode}');
   }

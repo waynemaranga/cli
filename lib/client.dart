@@ -66,7 +66,8 @@ class ChatClient {
     final systemMessage =
         Message(role: system, content: "You are a very helpful assistant");
     final userMessage =
-        Message(role: user, content: "Who are the Beastie Boys?");
+        // Message(role: user, content: "Who are the Beastie Boys?");
+        Message(role: user, content: input);
     final request = RequestBody(
         model: "gpt-3.5-turbo", messages: [systemMessage, userMessage]);
 

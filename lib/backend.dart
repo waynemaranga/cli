@@ -1,4 +1,5 @@
 /// backend.dart
+/// Dart keywords: https://dart.dev/language/keywords
 
 library backend;
 
@@ -7,17 +8,17 @@ import 'dart:convert'
 import 'dart:io';
 import 'package:postgres/postgres.dart'
     as postgres; // https://pub.dev/documentation/postgres/latest/
-import 'package:intl/intl.dart'; // for datetime stuff
+// import 'package:intl/intl.dart' show DateFormat; // TODO; usefor datetime stuff,
 import 'package:dotenv/dotenv.dart' as dotenv;
 import 'package:path/path.dart' as path;
 
 /// ## `Message`
 ///
-/// a message class, let's hope this works
+/// message object
 class Message {
   final String user;
   final String content;
-  DateTime timestamp;
+  DateTime timestamp; // TODO: implement intl date here, maybe
 
   Message({required this.user, required this.content})
       : timestamp = DateTime.now();
@@ -31,7 +32,8 @@ class Message {
 
 /// ## `Conversation`
 ///
-/// for database storage
+/// object for database storage
+/// contains a start time, an end time and the conversation
 class Conversation {
   final DateTime startTime;
   DateTime endTime;
@@ -44,7 +46,7 @@ class Conversation {
 
   /// ## `addMessage`
   ///
-  /// ... method to add messages to the backend
+  /// ... method to add messages to the message object (incorrect?)
   void addMessage(String user, String message) {
     messages.add(Message(user: user, content: message));
   }
@@ -57,55 +59,47 @@ class Conversation {
         'startTime': startTime.toIso8601String(),
         'endTime': endTime.toIso8601String(),
         'messages': messages.map((msg) => msg.toJson()).toList(),
-        // 'messages': messages.map((e) => null) //? One of you (IT'S YOU) will surely betray me
       };
 }
 
-//// class Backend(){} // class declaration, needs a body
 /// `Backend`
 ///
 /// a backend to write to the database (and any other database)
 ///
 /// try run in memory db from here, and python scripts
 class Backend {
-  // final postgres.Connection connection; // connection cannot be used as a setter if it's final
   late postgres.Connection _connection;
-  // marked as late because this non-nullable needs to blah-blah-blah
-  // -- options were: (1) mark as late 🩹 (2) initialise connection with a placeholder 🚫 (3) use a factory constructor ⌛
-  // probably not going to use a placeholder
 
-  // Backend(this.connection); // using a constructor now (I think?)
-  // Backend._();
-
+  /// a private named constructor
+  ///
+  /// Named Constructors: https://dart.dev/language/constructors#named-constructors
   Backend._() {
-    // _connectToDatabase();
     _initConnection();
   }
 
+  /// a `static` `final` field in this class, initialised by an instance of this
+  /// class
+  ///
+  /// `static`: https://dart.dev/language/classes#static-variables
+  ///
+  /// `final`: https://dart.dev/language/variables#final-and-const
   static final Backend _instance = Backend._();
 
-  // factory Backend() {
-  //   // _instance._connectToDatabase(); //?
-  //   _instance._init(); //?
-  //   return _instance;
-  // }
+  /// a factory constructor
+  /// https://dart.dev/language/constructors#factory-constructors
   factory Backend() {
-    // _instance._connectToDatabase();
     return _instance;
   }
 
-  // Future<void> _init() async {
-  //   // await ensureTableExists();
-  //   await _connectToDatabase();
-  //   // await ensureTableExists();
-  // }
-
-  /// ## `_connectToDatabase`
+  /// ## `_initConnection`
   ///
-  /// refactoring; better idea to connect to db in the backend module
-  ///
-  ///
-  // Future<void> _connectToDatabase() async {
+  /// load the env. vars from `.env`, connect to Postgres via endpoint
+  /// create the table if it doesn't exist
+  /// TODO: try intermediate Postgres stuff like server, ssl and multi-user
+  /// TODO: try over network e.g NeonDB
+  /// this method is asynchr. and returns a `Future<void>` asynchronously
+  /// Futures: https://dart.dev/libraries/dart-async#future
+  /// Async: https://dart.dev/language/async
   Future<void> _initConnection() async {
     dotenv.DotEnv env = dotenv.DotEnv(includePlatformEnvironment: true);
     env.load(['.env']);
@@ -133,6 +127,7 @@ class Backend {
 
     try {
       _connection = await postgres.Connection.open(endpoint);
+      //? SQL queries must be read from files
       String query = '''
       CREATE TABLE IF NOT EXISTS conversations (
         id SERIAL PRIMARY KEY,
@@ -148,11 +143,19 @@ class Backend {
     }
   }
 
+  /// ## `connectionIsOpen`
+  ///
+  /// Futures: https://dart.dev/libraries/dart-async#future
+  /// Returns a `Future<bool>` asynchronously...
   Future<bool> connectionIsOpen() async {
-    await _initConnection();
+    await _initConnection(); // https://dart.dev/language/async
     return _connection.isOpen;
   }
 
+  /// ## `executeSQLFile`
+  ///
+  /// finds file on os, executes Postgres-style, since `_connection` implements
+  /// `execute`
   Future<void> executeSQLFile(String filePath) async {
     final currentDir = Directory.current;
     final sqlFilePath = path.join(currentDir.path, 'lib/sql', 'ADDCHAT.sql');
@@ -163,37 +166,15 @@ class Backend {
 
   /// ## `storeConversation`
   ///
-  /// store the chat into the database(s) using SQL queries
+  /// Write to database by executing query on `_connection`
   Future<void> storeConversation(Conversation conversation) async {
-    // await _initConnection(); // Retry initialization
-
-    String conversationJSON = convert.jsonEncode(conversation);
+    String messagesJSON = convert.jsonEncode(conversation.messages);
     String query =
-        "INSERT INTO conversations (start_time, end_time, messages) VALUES (@startTime, @endTime, @messages)";
-    await _connection.execute(query, parameters: {
-      'startTime': conversation.startTime,
-      'endTime': conversation.endTime,
-      'messages': conversation.messages,
-    });
+        "INSERT INTO conversations (start_time, end_time, messages) VALUES (\$1, \$2, \$3)";
+    await _connection.execute(query, parameters: [
+      conversation.startTime.toIso8601String(), // Convert DateTime to string
+      conversation.endTime.toIso8601String(), // Convert DateTime to string
+      messagesJSON,
+    ]);
   }
-
-  /// ## `ifNotExists`
-  ///
-  /// should not be here 🩹
-  //
-  // Future<void> ensureTableExists() async {
-  //   if (_connection.isOpen) {
-  //     String query = '''
-  //   CREATE TABLE IF NOT EXISTS conversations (
-  //     id SERIAL PRIMARY KEY,
-  //     start_time TIMESTAMP NOT NULL,
-  //     end_time TIMESTAMP NOT NULL,
-  //     messages JSONB NOT NULL
-  //   );
-  //   ''';
-  //     await _connection.execute(query);
-  //   } else {
-  //     print("Error: Database connection is not open");
-  //   }
-  // }
 }

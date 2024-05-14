@@ -1,6 +1,7 @@
 archive/
 tests/
 cli.code-workspace
+.vscode
 
 # https://dart.dev/guides/libraries/private-files
 # Created by `dart pub`

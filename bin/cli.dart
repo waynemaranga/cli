@@ -20,8 +20,6 @@ Future<void> runApp() async {
     /// -->
     /// `connection.isOpen` returns a `bool`
     /// ....
-    // if (metal.connection.isOpen) {
-    // if (metal._connection != null && metal._connection.isOpen) {
     if (await metal.connectionIsOpen()) {
       /// Instances of the `TUI` and `ChatClient`
       client.ChatClient bot = client.ChatClient();
@@ -35,7 +33,6 @@ Future<void> runApp() async {
       }
 
       /// start the chat
-      // await chatui.startChat(); //! FIXME: I swear this await will be the end of me
       chatui.startChat();
     } else {
       print("Failed to connect to database");

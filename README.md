@@ -2,28 +2,35 @@
 in `lib/`, and example unit test in `test/`. -->
 
 # 👁️ CLI (Eye See A Lie?)
+
 ## Command Line Interface Chatbot built with Dart & GPT
-_Built right after ![Unopened AI](https://github.com/waynemaranga/unopened_ai), in a series of small projects with very bad jokes as titles._
+
+_Built right after [Unopened AI](https://github.com/waynemaranga/unopened_ai), in a series of small projects with very bad jokes as titles._
+
 <!-- Reminder to label the other one EH 👁️ -->
+
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Shell](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
 ![GPT](https://img.shields.io/badge/ChatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
-![Postgres](https://)
+![Postgres](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 
-## 📝 TODO:
-~~[x] Implement backend (like w/ `crossterm`)~~
+## 📝 TODO
 
-[ ] Store conversations in a Postgres DB
+- [x] ~~Implement backend (like w/ `crossterm`)~~ ✅
 
-[ ] Try streaming API
+- [x] ~~Store conversations in a Postgres DB~~ ✅
 
-[ ] Try in-memory datastore, maybe in a `backend.dart` module
+- [ ] Try streaming API
 
-[ ] Python + Dart interface for embedding, also in `backend.dart`
+- [ ] Try in-memory datastore, maybe in a `backend.dart` module
 
-[ ] An API to a frontent, unfortunately
+- [ ] Python + Dart interface for embedding, also in `backend.dart`
+- [ ] An API to a frontent, unfortunately
+
+- [ ] Move all SQL queries to `*.sql` files
 
 ## LICENSE
+
 Copyright 2024 ©️ Wayne Maranga
 
 Licensed under the Apache License, Version 2.0 (the "License");

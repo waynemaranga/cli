@@ -8,9 +8,10 @@ _Built right after ![Unopened AI](https://github.com/waynemaranga/unopened_ai), 
 ![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
 ![Shell](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
 ![GPT](https://img.shields.io/badge/ChatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
+![Postgres](https://)
 
 ## 📝 TODO:
-[ ] Implement backend (like w/ `crossterm`)
+~~[x] Implement backend (like w/ `crossterm`)~~
 
 [ ] Store conversations in a Postgres DB
 

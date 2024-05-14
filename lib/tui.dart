@@ -54,14 +54,25 @@ class TUI {
     conversation.endTime = DateTime.now(); // ... change end-time
 
     // -- storing the conversation (writing to db with the query)
-    await backend.storeConversation(conversation);
+    // await backend.storeConversation(conversation);
+    await _storeConversation(conversation);
 
     // -- all this styling can be one function
     console.setForegroundColor(ConsoleColor.yellow);
     console.writeLine('Exiting chat. Goodbye!');
     console.resetColorAttributes();
   }
+
+  Future<void> _storeConversation(Conversation conversation) async {
+    // Storing conversation using backend
+    if (await backend.connectionIsOpen()) {
+      // await backend._storeConversation(conversation);
+    } else {
+      print("Failed to store conversation: Database connection is not open");
+    }
+  }
 }
+
 
 // -- draw terminal
 // -- terminal features
@@ -69,4 +80,4 @@ class TUI {
 // -- text input and output
 // -- styling
 
-Future<void> main() async {}
+// Future<void> main() async {}

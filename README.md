@@ -13,6 +13,8 @@ _Built right after [Unopened AI](https://github.com/waynemaranga/unopened_ai), i
 ![Shell](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
 ![GPT](https://img.shields.io/badge/ChatGPT-74aa9c?style=for-the-badge&logo=openai&logoColor=white)
 ![Postgres](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Python]()
+![Lua]()
 
 ## 📝 TODO
 

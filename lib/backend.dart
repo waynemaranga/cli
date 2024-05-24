@@ -108,9 +108,8 @@ class Backend {
     String? postgresUsername = env['POSTGRES_USERNAME'] as String;
     String? postgresDatabase = env['POSTGRES_DATABASE'] as String;
     String? postgresHost = env['POSTGRES_HOST'] as String; // probably localhost
-    // int? postgresPort = env['POSTGRES_PORT'] as int; // probably 5432
-    // int postgresPort = int.parse(dotenv.env['POSTGRES_PORT']!);// probably 5432
-    int postgresPort = 5432;
+    int postgresPort = int.parse(env['POSTGRES_PORT']!); // probably 5432
+    // int postgresPort = 5432;
     String? postgressPassword = env['POSTGRES_PASSWORD'] as String;
 
     /// ## `endpoint`

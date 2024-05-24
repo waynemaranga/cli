@@ -1,9 +1,10 @@
-import click
+import click  # https://click.palletsprojects.com/en/8.1.x/
 from openai import OpenAI
-from pathlib import Path
+from pathlib import Path  # https://realpython.com/python-pathlib/
 from collections import Counter
 from os import getenv
 from dotenv import load_dotenv
+import datetime
 
 load_dotenv()
 
@@ -19,6 +20,7 @@ client = OpenAI(api_key=OPENAI_API_KEY)
 
 
 def respond(prompt: str, model="gpt-3.5-turbo") -> str:
+    """"""
     if type(prompt) != str:
         prompt = prompt.to_string()
 
